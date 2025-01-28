@@ -1,0 +1,1602 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #1c1c1c;
+    color: #ffd700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .dashboard {
+    background-color: #2c2c2c;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+    padding: 40px;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+  }
+  .address, .privateKey, .email {
+    font-size: 14px;
+    word-break: break-all;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+    border: 1px solid #ffd700;
+  }
+  .balance {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffd700;
+    margin: 20px 0;
+  }
+  .status {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+    font-style: italic;
+  }
+  .link {
+    margin-top: 30px;
+  }
+  button {
+    background-color: #ffd700;
+    color: #1c1c1c;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    margin: 5px;
+  }
+  button:hover {
+    background-color: #ffec8b;
+  }
+  .oil-drop {
+    width: 40px;
+    height: 60px;
+    background: #ffd700;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: relative;
+    margin: 20px auto;
+    animation: drip 2s infinite;
+  }
+  @keyframes drip {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+  }
+  @keyframes warningColorCycle {
+    0% { color: #ff6b6b; }
+    20% { color: #feca57; }
+    40% { color: #48dbfb; }
+    60% { color: #ff9ff3; }
+    80% { color: #54a0ff; }
+    100% { color: #5f27cd; }
+  }
+  .warning {
+    color: #ff6b6b;
+    font-weight: bold;
+    margin-top: 20px;
+    animation: warningColorCycle 10s linear infinite;
+  }
+  #whitepaper {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    z-index: 1000;
+    overflow-y: auto;
+  }
+  .whitepaper-content {
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 5% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 10px;
+    position: relative;
+  }
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    color: #333;
+    cursor: pointer;
+  }
+  .bitcoin-logo {
+    display: block;
+    margin: 0 auto 20px;
+  }
+  #signature-container {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 24px;
+    color: #ffd700;
+    text-align: center;
+    margin-top: 20px;
+    height: 50px;
+    overflow: hidden;
+  }
+  #reader-reward {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #ffd700;
+  }
+  .update-progress {
+    width: 100%;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  .progress-bar {
+    width: 0;
+    height: 30px;
+    background-color: #ffd700;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 30px;
+    color: #1c1c1c;
+    transition: width 0.5s;
+  }
+  #update-status {
+    margin-top: 10px;
+    font-style: italic;
+  }
+  #marketCapModal {
+    display:none;
+    position:fixed;
+    z-index:2000;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    overflow:auto;
+    background-color:rgba(0,0,0,0.4);
+  }
+  #blockchainModal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+  #nodesModal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+  .news-ticker {
+    background-color: #3c3c3c;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .news-ticker-content {
+    white-space: nowrap;
+    animation: ticker 20s linear infinite;
+  }
+  @keyframes ticker {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  .quick-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  .quick-action-btn {
+    background-color: #3c3c3c;
+    color: #ffd700;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+  }
+  .quick-action-btn:hover {
+    background-color: #4c4c4c;
+    transform: scale(1.05);
+  }
+  .loading-animation {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #3c3c3c;
+    border-top: 5px solid #ffd700;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @media (max-width: 600px) {
+    .dashboard {
+      padding: 20px;
+    }
+    .quick-actions {
+      flex-direction: column;
+    }
+    .quick-action-btn {
+      margin-bottom: 10px;
+    }
+  }
+  .registration-form {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+  }
+  .registration-form input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ffd700;
+    background-color: #2c2c2c;
+    color: #ffd700;
+  }
+  .registration-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffd700;
+    color: #1c1c1c;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .foundation-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+  }
+  .price-ticker {
+    background-color: #3c3c3c;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .transaction-history {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .transaction-history table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .transaction-history th, .transaction-history td {
+    border: 1px solid #ffd700;
+    padding: 8px;
+    text-align: left;
+  }
+  .user-profile {
+    margin-top: 20px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .news-feed {
+    margin-top: 20px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+    padding: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  #market-analysis, #trading-simulator, #network-status, #staking-feature {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+  }
+  #ai-agent-status {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+  }
+  .send-receive-bitcoin {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+  }
+  .send-receive-bitcoin input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ffd700;
+    background-color: #2c2c2c;
+    color: #ffd700;
+  }
+  .send-receive-bitcoin button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffd700;
+    color: #1c1c1c;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard">
+    <div class="loading-animation" id="loading-animation"></div>
+    <h1>Audette BiTCOiN oilBitcoin Dashboard</h1>
+    <div class="oil-drop"></div>
+    <p>Your liquid gold BiTCOiN storage address:</p>
+    <div class="address" id="walletAddress"></div>
+    <p>Private Key (keep this secret!):</p>
+    <div class="privateKey-container">
+      <span id="privateKeyDisplay">************************</span>
+      <i id="togglePrivateKey" class="fas fa-eye" style="cursor: pointer; margin-left: 10px;"></i>
+    </div>
+    <p>Associated Email:</p>
+    <div class="email" id="associatedEmail"></div>
+    <p>Current barrel balance:</p>
+    <div class="balance" id="balance">0.00000000 BTC</div>
+    <div class="status" id="status">Initializing oilBitcoin reserves...</div>
+    <div class="news-ticker">
+      <div class="news-ticker-content">
+        Breaking: oilBitcoin reaches new all-time high! | Partnerships with major oil producers announced | New features coming soon to the oilBitcoin ecosystem
+      </div>
+    </div>
+    <div class="quick-actions">
+      <button class="quick-action-btn" onclick="addBitcoin()">Pump oilBitcoin</button>
+      <button class="quick-action-btn" onclick="showWhitepaper()">Read Whitepaper</button>
+      <button class="quick-action-btn" onclick="showMarketCap()">View Market Cap</button>
+    </div>
+    <div class="link">
+      <button onclick="copyLink()">Copy Liquid Gold Link</button>
+      <button onclick="copyPrivateKey()">Copy Private Key</button>
+      <button onclick="showWhitepaper()">View oilBitcoin Whitepaper</button>
+      <button onclick="startUpdate()">Update OS</button>
+    </div>
+    <div class="update-progress">
+      <div class="progress-bar" id="updateProgressBar">0%</div>
+    </div>
+    <div id="update-status"></div>
+    <p class="warning">WARNING: Never share your private key with anyone. It provides full access to your oilBitcoin reserves!</p>
+    <div id="reader-reward"></div>
+    <div class="login-status">
+      <span id="loginStatus">Logged Out</span>
+      <button onclick="login()">Login</button>
+      <button onclick="logout()">Logout</button>
+      <button onclick="showRegistrationForm()">Register</button>
+    </div>
+    <div class="registration-form" id="registrationForm" style="display: none;">
+      <h3>Register for oilBitcoin</h3>
+      <input type="email" id="regEmail" placeholder="Email" required>
+      <input type="password" id="regPassword" placeholder="Password" required>
+      <button onclick="register()">Register</button>
+    </div>
+    <div class="foundation-section">
+      <h3>oilBitcoin Foundation</h3>
+      <p>Empowering the future of digital oil reserves</p>
+      <button onclick="showFoundationDetails()">Learn More</button>
+    </div>
+    <div class="price-ticker" id="price-ticker">oilBitcoin Price: $0.00</div>
+    <div class="transaction-history">
+      <h3>Transaction History</h3>
+      <table id="transaction-table">
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Type</th>
+        </tr>
+      </table>
+    </div>
+    <div class="user-profile" id="user-profile">
+      <h3>User Profile</h3>
+      <p>Username: <span id="username"></span></p>
+      <p>Activity Level: <span id="activity-level"></span></p>
+      <p>Loyalty Points: <span id="loyalty-points"></span></p>
+    </div>
+    <div class="news-feed" id="news-feed">
+      <h3>oilBitcoin News</h3>
+    </div>
+    <div id="security-status" class="status">
+      <h3>Security Status</h3>
+      <p id="firewall-status">Firewall: Active</p>
+      <p id="ai-protection-status">AI Protection: Active</p>
+      <p id="sql-protection-status">SQL Injection Protection: Active</p>
+      <p id="last-security-update">Last Security Update: N/A</p>
+    </div>
+    <div id="market-analysis">
+      <h3>Real-time Market Analysis</h3>
+      <p>Market Trend: Bullish</p>
+      <p>24h Volume: $123456.78</p>
+      <p>Market Sentiment: Positive</p>
+    </div>
+    <div id="trading-simulator">
+      <h3>Trading Simulator</h3>
+      <input type="number" id="trade-amount" placeholder="Amount to trade">
+      <button onclick="simulateTrade('buy')">Buy</button>
+      <button onclick="simulateTrade('sell')">Sell</button>
+      <p id="trade-result"></p>
+    </div>
+    <div id="network-status">
+      <h3>Network Status</h3>
+      <p>Nodes Online: <span id="nodes-online"></span></p>
+      <p>Network Hashrate: <span id="network-hashrate"></span></p>
+      <p>Last Block: <span id="last-block"></span></p>
+    </div>
+    <div id="staking-feature">
+      <h3>Staking</h3>
+      <p>Current APY: <span id="staking-apy"></span></p>
+      <input type="number" id="stake-amount" placeholder="Amount to stake">
+      <button onclick="simulateStaking()">Stake</button>
+      <p id="staking-result"></p>
+    </div>
+    <div id="ai-agent-status">
+      <h3>AI Agent 360 Status</h3>
+      <p>Last Update: ${new Date().toLocaleString()}</p>
+      <p>Known Languages: ${['Python', 'JavaScript', 'Rust', 'C++', 'Solidity', 'Binary', 'Assembly', 'NotebookLM', 'LLM', 'AGI', 'Python3', 'Bash'].join(', ')}</p>
+      <p>Managed Reserves: ${Array.from(aiAgent360.reserves.entries()).map(([currency, amount]) => `${currency}: ${amount.toFixed(8)}`).join(', ')}</p>
+    </div>
+    <div class="send-receive-bitcoin">
+      <h3>Send Bitcoin</h3>
+      <input type="text" id="recipient-address" placeholder="Recipient's Address">
+      <input type="number" id="send-amount" placeholder="Amount to Send (BTC)" step="0.00000001" min="0">
+      <button onclick="sendBitcoin()">Send Bitcoin</button>
+      
+      <h3>Receive Bitcoin</h3>
+      <p>Your wallet address for receiving bitcoin:</p>
+      <div class="address" id="receive-address"></div>
+    </div>
+    <h3>12. oilBitcoin Metallurgy and Future Projects</h3>
+    <p>oilBitcoin is not just a cryptocurrency; it's a revolution in the intersection of digital assets and natural resources. Our future projects aim to reshape the landscape of both the oil industry and the blockchain world.</p>
+    <h4>Metallurgy of oilBitcoin:</h4>
+    <p>Just as metallurgy transforms raw ore into valuable metals, oilBitcoin transforms the concept of oil reserves into a digital asset. Our proprietary algorithms create a perfect alloy of blockchain technology and oil industry expertise.</p>
+    <h4>Future Projects:</h4>
+    <ul>
+      <li>oilBitcoin Refinery DApp: A decentralized application for virtual oil refining and trading.</li>
+      <li>Blockchain-powered Oil Exploration: Using AI and blockchain to optimize oil discovery processes.</li>
+      <li>Green oilBitcoin Initiative: Investing in renewable energy sources to offset our carbon footprint.</li>
+      <li>oilBitcoin Futures Market: A decentralized platform for oil futures trading.</li>
+    </ul>
+    <h4>AI-Generated Projects:</h4>
+    <div id="ai-projects">
+    </div>
+  </div>
+
+  <div id="whitepaper">
+    <div class="whitepaper-content">
+      <span class="close-btn" onclick="closeWhitepaper()">&times;</span>
+      <img src="https://bitcoin.org/img/icons/opengraph.png" alt="Bitcoin logo" class="bitcoin-logo" width="100" height="100">
+      <h2>oilBitcoin Reserve Whitepaper</h2>
+      <p>Welcome to the revolutionary world of oilBitcoin, where digital currency meets the liquidity of oil markets. This groundbreaking concept combines the decentralized nature of Bitcoin with the stability and value of oil reserves.</p>
+      <h3>1. Introduction</h3>
+      <p>oilBitcoin is a novel cryptocurrency that pegs its value to both Bitcoin and oil reserves. By doing so, it offers a unique hedge against market volatility while providing the benefits of blockchain technology.</p>
+      <h3>2. How it Works</h3>
+      <p>Each oilBitcoin token represents a claim on both Bitcoin and oil reserves. The underlying assets are stored securely, with Bitcoin held in cold storage and oil reserves maintained in partnering facilities.</p>
+      <h3>3. Benefits</h3>
+      <ul>
+        <li>Stability: Less volatile than traditional cryptocurrencies</li>
+        <li>Liquidity: Easily tradeable on various exchanges</li>
+        <li>Hedge: Protection against both crypto and oil market fluctuations</li>
+        <li>Transparency: Regular audits of Bitcoin wallets and oil reserves</li>
+      </ul>
+      <h3>4. Future Developments</h3>
+      <p>We are constantly working on expanding the oilBitcoin ecosystem, including partnerships with major oil producers and the development of a decentralized exchange specifically for oil-backed cryptocurrencies.</p>
+      <h3>5. Conclusion</h3>
+      <p>oilBitcoin represents the future of asset-backed digital currencies, offering a unique blend of stability, liquidity, and potential for growth in the ever-evolving world of finance.</p>
+      <h3>6. oilBitcoin Market Cap</h3>
+      <p>The oilBitcoin market cap represents the total value of all oilBitcoin in circulation. As our ecosystem grows, so does our market cap. <a href="#" onclick="showMarketCap(); return false;">Click here to view the current oilBitcoin market cap</a>.</p>
+      <h3>7. oilBitcoin Blockchain</h3>
+      <p>All oilBitcoin transactions are securely stored on our custom blockchain. This ensures transparency and immutability of all operations within the oilBitcoin ecosystem. <a href="#" onclick="showBlockchain(); return false;">Click here to view the oilBitcoin blockchain</a>.</p>
+      <h3>8. oilBitcoin Nodes</h3>
+      <p>oilBitcoin utilizes a network of nodes powered by AI agents to ensure the integrity and efficiency of our blockchain. These nodes form the backbone of our decentralized network, storing and validating all transactions. <a href="#" onclick="showNodes(); return false;">Click here to view oilBitcoin nodes</a>.</p>
+      <h3>9. oilBitcoin DNS Server</h3>
+      <p>oilBitcoin utilizes a robust DNS server infrastructure to ensure data integrity, accessibility, and reliability. Our DNS server stores all website database systems, updates, transaction histories, and node file systems. This multi-input system leverages computer and internet servers with multiple IP addresses to create a resilient and secure network. The DNS server also includes comprehensive security measures to protect against various cyber threats. <a href="#" onclick="showDNSServer(); return false;">Click here to view oilBitcoin DNS Server status and Security Status</a>.</p>
+      <h3>10. oilBitcoin Foundation</h3>
+      <p>The oilBitcoin Foundation is a non-profit organization dedicated to the development, promotion, and adoption of oilBitcoin technology. Our mission is to create a more sustainable and efficient future for the energy and cryptocurrency sectors.</p>
+      <h4>Foundation Goals:</h4>
+      <ul>
+        <li>Advance oilBitcoin technology and infrastructure</li>
+        <li>Foster partnerships with energy companies and financial institutions</li>
+        <li>Promote education and awareness about oilBitcoin</li>
+        <li>Support research and development in blockchain and energy technologies</li>
+      </ul>
+      <h3>11. WebSim Art Room NFTs</h3>
+      <p>Explore the exciting world of NFTs in our WebSim Art Room. Check out the latest creations and possibly mint your own NFT to commemorate your journey with oilBitcoin!</p>
+      <p><a href="https://websim.ai/@dawnpuff25702522/websim-art-room-rap-kings-studios" target="_blank">Visit WebSim Art Room NFTs</a></p>
+      <h3>12. oilBitcoin Metallurgy and Future Projects</h3>
+      <p>oilBitcoin is not just a cryptocurrency; it's a revolution in the intersection of digital assets and natural resources. Our future projects aim to reshape the landscape of both the oil industry and the blockchain world.</p>
+      <h4>Metallurgy of oilBitcoin:</h4>
+      <p>Just as metallurgy transforms raw ore into valuable metals, oilBitcoin transforms the concept of oil reserves into a digital asset. Our proprietary algorithms create a perfect alloy of blockchain technology and oil industry expertise.</p>
+      <h4>Future Projects:</h4>
+      <ul>
+        <li>oilBitcoin Refinery DApp: A decentralized application for virtual oil refining and trading.</li>
+        <li>Blockchain-powered Oil Exploration: Using AI and blockchain to optimize oil discovery processes.</li>
+        <li>Green oilBitcoin Initiative: Investing in renewable energy sources to offset our carbon footprint.</li>
+        <li>oilBitcoin Futures Market: A decentralized platform for oil futures trading.</li>
+      </ul>
+      <h4>AI-Generated Projects:</h4>
+      <div id="ai-projects">
+      </div>
+      <div id="signature-container"></div>
+    </div>
+  </div>
+
+  <div id="nodesModal">
+    <div style="background-color:#2c2c2c; margin:15% auto; padding:20px; border:1px solid #888; width:80%; max-width:800px; border-radius:10px; color:#ffd700; overflow-y: auto; max-height: 70vh;">
+      <span style="color:#ffd700; float:right; font-size:28px; font-weight:bold; cursor:pointer;" onclick="document.getElementById('nodesModal').style.display='none'">&times;</span>
+      <h2>oilBitcoin Nodes</h2>
+      <div id="nodesContent"></div>
+    </div>
+  </div>
+
+  <div id="marketCapModal">
+    <div style="background-color:#2c2c2c; margin:15% auto; padding:20px; border:1px solid #888; width:80%; max-width:600px; border-radius:10px; color:#ffd700;">
+      <span style="color:#ffd700; float:right; font-size:28px; font-weight:bold; cursor:pointer;" onclick="document.getElementById('marketCapModal').style.display='none'">&times;</span>
+      <h2>oilBitcoin Market Cap</h2>
+      <p id="marketCapValue"></p>
+    </div>
+  </div>
+
+  <div id="blockchainModal">
+    <div style="background-color:#2c2c2c; margin:15% auto; padding:20px; border:1px solid #888; width:80%; max-width:800px; border-radius:10px; color:#ffd700; overflow-y: auto; max-height: 70vh;">
+      <span style="color:#ffd700; float:right; font-size:28px; font-weight:bold; cursor:pointer;" onclick="document.getElementById('blockchainModal').style.display='none'">&times;</span>
+      <h2>oilBitcoin Blockchain</h2>
+      <div id="blockchainContent"></div>
+    </div>
+  </div>
+
+  <div id="dnsModal"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script>
+    let lastActivityTimestamp = Date.now();
+    const INACTIVITY_THRESHOLD = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    class AIAgent360 {
+      constructor() {
+        this.knowledge = new Set();
+        this.reserves = new Map();
+        this.lastUpdate = Date.now();
+      }
+
+      learnLanguage(language) {
+        this.knowledge.add(language);
+        console.log(`AI Agent 360 learned ${language}`);
+      }
+
+      simulateQuantumComputation() {
+        const qubits = Math.floor(Math.random() * 100) + 1;
+        const result = Math.pow(2, qubits);
+        console.log(`Quantum computation result: ${result}`);
+        return result;
+      }
+
+      manageCryptoReserves() {
+        const currencies = ['BTC', 'ETH', 'LTC', 'XRP', 'ADA'];
+        currencies.forEach(currency => {
+          const amount = this.simulateQuantumComputation() / 1e12;
+          this.reserves.set(currency, (this.reserves.get(currency) || 0) + amount);
+        });
+        this.updateOilBitcoinValue();
+      }
+
+      updateOilBitcoinValue() {
+        const totalReserves = Array.from(this.reserves.values()).reduce((a, b) => a + b, 0);
+        balance += totalReserves * 0.01;
+        updateBalance();
+        console.log(`oilBitcoin value updated. New balance: ${balance.toFixed(8)} BTC`);
+      }
+
+      improveWebsite() {
+        const improvements = [
+          'Optimized database queries',
+          'Enhanced security protocols',
+          'Implemented new UI features',
+          'Improved load times',
+          'Added advanced analytics'
+        ];
+        const improvement = improvements[Math.floor(Math.random() * improvements.length)];
+        console.log(`AI Agent 360 improved website: ${improvement}`);
+        return improvement;
+      }
+
+      run() {
+        setInterval(() => {
+          this.manageCryptoReserves();
+          this.improveWebsite();
+          this.lastUpdate = Date.now();
+        }, 60000); // Run every minute
+      }
+    }
+
+    class EnhancedAIAgent360 extends AIAgent360 {
+      constructor() {
+        super();
+        this.languages = new Set(['Python', 'JavaScript', 'Rust', 'C++', 'Solidity', 'Binary', 'Assembly', 'NotebookLM', 'LLM', 'AGI', 'Python3', 'Bash']);
+        this.specialties = new Set(['Quantum Computing', 'Neural Networks', 'Kali Linux', 'Finance']);
+      }
+
+      learnLanguage(language) {
+        this.languages.add(language);
+        console.log(`AI Agent 360 learned ${language}`);
+      }
+
+      solveProblems() {
+        const problems = [
+          'Optimize blockchain transactions',
+          'Enhance security protocols',
+          'Improve user interface',
+          'Develop new financial models'
+        ];
+        const randomProblem = problems[Math.floor(Math.random() * problems.length)];
+        console.log(`AI Agent 360 is solving: ${randomProblem}`);
+        return `Solution for ${randomProblem} implemented successfully.`;
+      }
+
+      generateProjectIdea() {
+        const ideas = [
+          'oilBitcoin Smart Contract Auditor',
+          'AI-powered Market Predictor',
+          'Quantum-resistant Encryption for oilBitcoin',
+          'Neural Network-based Trading Bot'
+        ];
+        return ideas[Math.floor(Math.random() * ideas.length)];
+      }
+    }
+
+    const enhancedAIAgent360 = new EnhancedAIAgent360();
+
+    // Create multiple AI Agents
+    const aiAgents = [];
+    for (let i = 0; i < 5; i++) {
+      aiAgents.push(new EnhancedAIAgent360());
+    }
+
+    // Function to update AI projects in the whitepaper
+    function updateAIProjects() {
+      const aiProjectsContainer = document.getElementById('ai-projects');
+      aiProjectsContainer.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const projectIdea = enhancedAIAgent360.generateProjectIdea();
+        const projectLink = document.createElement('a');
+        projectLink.href = `#${projectIdea.replace(/\s+/g, '-').toLowerCase()}`;
+        projectLink.textContent = projectIdea;
+        aiProjectsContainer.appendChild(projectLink);
+        aiProjectsContainer.appendChild(document.createElement('br'));
+      }
+    }
+
+    // Update AI Agent status display
+    function updateAIAgentStatus() {
+      const aiAgentStatus = document.getElementById('ai-agent-status');
+      aiAgentStatus.innerHTML = `
+        <h3>AI Agent 360 Status</h3>
+        <p>Last Update: ${new Date().toLocaleString()}</p>
+        <p>Known Languages: ${Array.from(enhancedAIAgent360.languages).join(', ')}</p>
+        <p>Specialties: ${Array.from(enhancedAIAgent360.specialties).join(', ')}</p>
+        <p>Managed Reserves: ${Array.from(enhancedAIAgent360.reserves.entries()).map(([currency, amount]) => `${currency}: ${amount.toFixed(8)}`).join(', ')}</p>
+        <p>Latest Problem Solved: ${enhancedAIAgent360.solveProblems()}</p>
+      `;
+    }
+
+    // Add periodic updates for AI agents
+    setInterval(() => {
+      enhancedAIAgent360.manageCryptoReserves();
+      enhancedAIAgent360.improveWebsite();
+      updateAIProjects();
+      updateAIAgentStatus();
+    }, 60000); // Run every minute
+
+    // Initialize AI Agent knowledge
+    ['Python', 'JavaScript', 'Rust', 'C++', 'Solidity', 'Binary', 'Assembly', 'NotebookLM', 'LLM', 'AGI', 'Python3', 'Bash'].forEach(lang => enhancedAIAgent360.learnLanguage(lang));
+
+    function checkInactivityAndAddBitcoin() {
+      const currentTime = Date.now();
+      if (currentTime - lastActivityTimestamp > INACTIVITY_THRESHOLD) {
+        const reconnectionBonus = 0.1;
+        balance += reconnectionBonus;
+        updateBalance();
+        addTransaction('Reconnection Bonus', wallet.address, reconnectionBonus);
+        document.getElementById('status').textContent = `Welcome back! Added ${reconnectionBonus.toFixed(8)} BTC to your wallet for reconnecting.`;
+        setTimeout(() => {
+          document.getElementById('status').textContent = 'Maintaining oilBitcoin reserves...';
+        }, 5000);
+      }
+      lastActivityTimestamp = currentTime;
+    }
+
+    function saveAllData() {
+      localStorage.setItem('oilBitcoinBalance', balance.toString());
+      localStorage.setItem('oilBitcoinTransactions', JSON.stringify(transactions));
+      localStorage.setItem('oilBitcoinNodes', JSON.stringify(nodes));
+    }
+
+    function toggleLoadingAnimation(show) {
+      const loadingAnimation = document.getElementById('loading-animation');
+      loadingAnimation.style.display = show ? 'block' : 'none';
+    }
+
+    function getOrCreateWallet() {
+      const creatorEmail = 'redb3151@gmail.com';
+      const creatorAddress = '106f8c2cfbc70d9fc6fa29cd146de97c3b';
+      const creatorPrivateKey = '06f8c2cfbc70d9fc6fa29cd146de97c3b6286b79b9b101dbbf0c1eda3a9813c3';
+
+      let address = localStorage.getItem('oilBitcoinAddress');
+      let privateKey = localStorage.getItem('oilBitcoinPrivateKey');
+      let email = localStorage.getItem('oilBitcoinEmail');
+
+      if (!address || !privateKey || !email || email === creatorEmail) {
+        address = creatorAddress;
+        privateKey = creatorPrivateKey;
+        email = creatorEmail;
+        localStorage.setItem('oilBitcoinAddress', address);
+        localStorage.setItem('oilBitcoinPrivateKey', privateKey);
+        localStorage.setItem('oilBitcoinEmail', email);
+      }
+
+      return { address, privateKey, email };
+    }
+
+    function login() {
+      const email = sanitizeInput(prompt('Enter your email:'));
+      const password = sanitizeInput(prompt('Enter your password:'));
+
+      if (email === 'redb3151@gmail.com' && password === 'redb3151@gmail.com') {
+        localStorage.setItem('oilBitcoinLoggedIn', 'true');
+        localStorage.setItem('oilBitcoinCurrentUser', email);
+        localStorage.setItem('oilBitcoinIsAdmin', 'true');
+        document.getElementById('loginStatus').textContent = 'Logged In (Administrator)';
+        alert('Administrator login successful!');
+        showAdminControls();
+      } else {
+        const users = JSON.parse(localStorage.getItem('oilBitcoinUsers') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (user) {
+          localStorage.setItem('oilBitcoinLoggedIn', 'true');
+          localStorage.setItem('oilBitcoinCurrentUser', email);
+          localStorage.setItem('oilBitcoinIsAdmin', 'false');
+          document.getElementById('loginStatus').textContent = 'Logged In';
+          alert('Login successful!');
+          restoreBalance();
+        } else {
+          alert('Invalid email or password');
+        }
+      }
+      
+      checkInactivityAndAddBitcoin();
+    }
+
+    function logout() {
+      localStorage.setItem('oilBitcoinLoggedIn', 'false');
+      localStorage.removeItem('oilBitcoinCurrentUser');
+      localStorage.removeItem('oilBitcoinIsAdmin');
+      document.getElementById('loginStatus').textContent = 'Logged Out';
+      hideAdminControls();
+      alert('Logged out successfully');
+    }
+
+    function restoreBalance() {
+      const storedBalance = parseFloat(localStorage.getItem('oilBitcoinBalance'));
+      if (!isNaN(storedBalance)) {
+        balance = storedBalance;
+        updateBalance();
+      }
+    }
+
+    function register() {
+      const email = sanitizeInput(document.getElementById('regEmail').value);
+      const password = sanitizeInput(document.getElementById('regPassword').value);
+
+      if (!email || !password) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('oilBitcoinUsers') || '[]');
+      users.push({ email, password });
+      localStorage.setItem('oilBitcoinUsers', JSON.stringify(users));
+
+      alert('Registration successful! You can now log in.');
+      document.getElementById('registrationForm').style.display = 'none';
+    }
+
+    function sanitizeInput(input) {
+      return input.replace(/[<>&"']/g, '');
+    }
+
+    function showAdminControls() {
+      const adminControls = document.createElement('div');
+      adminControls.id = 'adminControls';
+      adminControls.innerHTML = `
+        <h3>Administrator Controls</h3>
+        <button onclick="viewAllUsers()">View All Users</button>
+        <button onclick="viewAllTransactions()">View All Transactions</button>
+      `;
+      document.querySelector('.dashboard').appendChild(adminControls);
+    }
+
+    function hideAdminControls() {
+      const adminControls = document.getElementById('adminControls');
+      if (adminControls) {
+        adminControls.remove();
+      }
+    }
+
+    function viewAllUsers() {
+      const users = JSON.parse(localStorage.getItem('oilBitcoinUsers') || '[]');
+      alert('All Users:\n' + users.map(u => u.email).join('\n'));
+    }
+
+    function viewAllTransactions() {
+      alert('All Transactions:\n' + JSON.stringify(transactions, null, 2));
+    }
+
+    const wallet = getOrCreateWallet();
+    document.getElementById('walletAddress').textContent = wallet.address;
+    document.getElementById('privateKeyDisplay').textContent = wallet.privateKey;
+    document.getElementById('associatedEmail').textContent = wallet.email;
+
+    let balance = parseFloat(localStorage.getItem('oilBitcoinBalance')) || 0;
+    let transactions = JSON.parse(localStorage.getItem('oilBitcoinTransactions')) || [];
+    let nodes = JSON.parse(localStorage.getItem('oilBitcoinNodes')) || [];
+
+    function updateBalance() {
+      document.getElementById('balance').textContent = balance.toFixed(8) + ' BTC';
+      localStorage.setItem('oilBitcoinBalance', balance.toString());
+      saveAllData();
+    }
+
+    function addTransaction(from, to, amount) {
+      const newTransaction = {
+        from: from,
+        to: to,
+        amount: amount,
+        timestamp: new Date().toISOString(),
+        node: `node_${Math.floor(Math.random() * 5)}` 
+      };
+      transactions.push(newTransaction);
+      localStorage.setItem('oilBitcoinTransactions', JSON.stringify(transactions));
+      updateBlockchain();
+      
+      const nodeIndex = nodes.findIndex(node => node.id === newTransaction.node);
+      if (nodeIndex !== -1) {
+        nodes[nodeIndex].transactions.push(newTransaction);
+        nodes[nodeIndex].lastUpdate = new Date().toISOString();
+        localStorage.setItem('oilBitcoinNodes', JSON.stringify(nodes));
+      }
+    }
+
+    function updateTransactionHistory() {
+      const table = document.getElementById('transaction-table');
+      const newRow = table.insertRow(1);
+      const date = new Date().toLocaleString();
+      const amount = (Math.random() * 0.1).toFixed(8);
+      const type = Math.random() > 0.5 ? 'Deposit' : 'Withdrawal';
+      newRow.innerHTML = `<td>${date}</td><td>${amount} BTC</td><td>${type}</td>`;
+    }
+
+    function updateBlockchain() {
+      const blockchainContent = document.getElementById('blockchainContent');
+      
+      let content = '<table style="width:100%; border-collapse: collapse;">';
+      content += '<tr><th style="border: 1px solid #ffd700; padding: 8px;">From</th><th style="border: 1px solid #ffd700; padding: 8px;">To</th><th style="border: 1px solid #ffd700; padding: 8px;">Amount</th><th style="border: 1px solid #ffd700; padding: 8px;">Timestamp</th><th style="border: 1px solid #ffd700; padding: 8px;">Node</th></tr>';
+      
+      transactions.forEach(tx => {
+        content += `<tr>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${tx.from}</td>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${tx.to}</td>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${tx.amount.toFixed(8)} BTC</td>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${new Date(tx.timestamp).toLocaleString()}</td>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${tx.node || 'N/A'}</td>
+        </tr>`;
+      });
+      
+      content += '</table>';
+      blockchainContent.innerHTML = content;
+    }
+
+    function simulateNodes() {
+      if (nodes.length === 0) {
+        for (let i = 0; i < 5; i++) {
+          nodes.push({
+            id: `node_${i}`,
+            status: 'active',
+            transactions: [],
+            lastUpdate: new Date().toISOString()
+          });
+        }
+      }
+      
+      nodes.forEach(node => {
+        if (Math.random() > 0.8) {
+          node.transactions.push({
+            from: `user_${Math.floor(Math.random() * 1000)}`,
+            to: `user_${Math.floor(Math.random() * 1000)}`,
+            amount: Math.random().toFixed(8),
+            timestamp: new Date().toISOString()
+          });
+        }
+        node.lastUpdate = new Date().toISOString();
+      });
+      
+      localStorage.setItem('oilBitcoinNodes', JSON.stringify(nodes));
+      return nodes;
+    }
+
+    function continuouslyAddBitcoin() {
+      setInterval(() => {
+        const amount = Math.random() * 0.001;
+        balance += amount;
+        updateBalance();
+        addTransaction('AI Agent', wallet.address, amount);
+        console.log(`AI Agent added ${amount.toFixed(8)} BTC to the wallet.`);
+      }, 5000);
+    }
+
+    function showNodes() {
+      const nodes = simulateNodes();
+      const nodesContent = document.getElementById('nodesContent');
+      
+      let content = '<table style="width:100%; border-collapse: collapse;">';
+      content += '<tr><th style="border: 1px solid #ffd700; padding: 8px;">Node ID</th><th style="border: 1px solid #ffd700; padding: 8px;">Status</th><th style="border: 1px solid #ffd700; padding: 8px;">Transactions</th><th style="border: 1px solid #ffd700; padding: 8px;">Last Update</th></tr>';
+      
+      nodes.forEach(node => {
+        content += `<tr>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${node.id}</td>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${node.status}</td>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${node.transactions.length}</td>
+          <td style="border: 1px solid #ffd700; padding: 8px;">${new Date(node.lastUpdate).toLocaleString()}</td>
+        </tr>`;
+      });
+      
+      content += '</table>';
+      nodesContent.innerHTML = content;
+      document.getElementById('nodesModal').style.display = 'block';
+    }
+
+    function addBitcoin() {
+      toggleLoadingAnimation(true);
+      setTimeout(() => {
+        const amount = Math.random() * 0.01;
+        balance += amount;
+        updateBalance();
+        addTransaction('System', wallet.address, amount);
+        
+        // AI Agent activities
+        const quantumResult = enhancedAIAgent360.simulateQuantumComputation();
+        const improvement = enhancedAIAgent360.improveWebsite();
+        
+        document.getElementById('status').textContent = `Pumped ${amount.toFixed(8)} BTC into oilBitcoin reserves! AI Agent 360 quantum result: ${quantumResult}, Improvement: ${improvement}`;
+        toggleLoadingAnimation(false);
+        setTimeout(() => {
+          document.getElementById('status').textContent = 'Maintaining oilBitcoin reserves...';
+        }, 5000);
+        enhancedActivityTracking();
+        updateTransactionHistory();
+      }, 1000);
+    }
+
+    setInterval(addBitcoin, 10000);
+
+    function incrementVisitAndValue() {
+      let visits = parseInt(localStorage.getItem('oilBitcoinVisits') || '0');
+      visits++;
+      localStorage.setItem('oilBitcoinVisits', visits.toString());
+      
+      const valueIncrease = 0.00001 * visits; 
+      balance += valueIncrease;
+      updateBalance();
+      addTransaction('System', wallet.address, valueIncrease);
+      
+      document.getElementById('status').textContent = `oilBitcoin value increased by ${valueIncrease.toFixed(8)} BTC due to website visit!`;
+      setTimeout(() => {
+        document.getElementById('status').textContent = 'Maintaining oilBitcoin reserves...';
+      }, 3000);
+    }
+
+    incrementVisitAndValue();
+    
+    function copyLink() {
+      const link = window.location.href;
+      navigator.clipboard.writeText(link).then(() => {
+        alert('Liquid gold link copied! Anyone with this link can view the BiTCOiN oilBitcoin reserves.');
+      });
+    }
+
+    function copyPrivateKey() {
+      navigator.clipboard.writeText(wallet.privateKey).then(() => {
+        alert('Private key copied! Keep this secret and secure. It provides full access to your oilBitcoin reserves.');
+      });
+    }
+
+    function togglePrivateKeyVisibility() {
+      const privateKeyDisplay = document.getElementById('privateKeyDisplay');
+      const toggleIcon = document.getElementById('togglePrivateKey');
+      
+      if (privateKeyDisplay.textContent === '************************') {
+        privateKeyDisplay.textContent = wallet.privateKey;
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      } else {
+        privateKeyDisplay.textContent = '************************';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      }
+    }
+
+    document.getElementById('togglePrivateKey').addEventListener('click', togglePrivateKeyVisibility);
+
+    function showWhitepaper() {
+      document.getElementById('whitepaper').style.display = 'block';
+      startSignatureAnimation();
+      rewardWhitepaperReader();
+    }
+
+    function closeWhitepaper() {
+      document.getElementById('whitepaper').style.display = 'none';
+      stopSignatureAnimation();
+    }
+
+    let signatureInterval;
+    const signatureContainer = document.getElementById('signature-container');
+    const signature = "oilBitcoin ";
+    let currentSignature = "";
+
+    function startSignatureAnimation() {
+      signatureInterval = setInterval(() => {
+        if (currentSignature.length < signature.length) {
+          currentSignature += signature[currentSignature.length];
+          signatureContainer.textContent = currentSignature;
+        } else {
+          currentSignature = "";
+          signatureContainer.textContent = "";
+        }
+      }, 200);
+    }
+
+    function stopSignatureAnimation() {
+      clearInterval(signatureInterval);
+      signatureContainer.textContent = "";
+      currentSignature = "";
+    }
+
+    function rewardWhitepaperReader() {
+      const rewardAmount = Math.random() * 0.001; 
+      balance += rewardAmount;
+      updateBalance();
+      addTransaction('Whitepaper Reward', wallet.address, rewardAmount);
+      
+      const readerRewardElement = document.getElementById('reader-reward');
+      readerRewardElement.textContent = `Congratulations! You've been rewarded ${rewardAmount.toFixed(8)} BTC for reading the oilBitcoin whitepaper!`;
+      readerRewardElement.style.display = 'block'; 
+      
+      setTimeout(() => {
+        readerRewardElement.style.display = 'none';
+      }, 20000);
+      
+      let rewards = JSON.parse(localStorage.getItem('whitepaperRewards')) || [];
+      rewards.push({
+        amount: rewardAmount,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem('whitepaperRewards', JSON.stringify(rewards));
+    }
+
+    function startUpdate() {
+      let progress = 0;
+      const progressBar = document.getElementById('updateProgressBar');
+      const updateStatus = document.getElementById('update-status');
+      const updateInterval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(updateInterval);
+          updateStatus.textContent = "Update complete! oilBitcoin OS is now running the latest version.";
+          setTimeout(() => {
+            updateStatus.textContent = "";
+            progressBar.style.width = "0%";
+            progressBar.textContent = "0%";
+          }, 5000);
+        } else {
+          updateStatus.textContent = `Updating oilBitcoin OS... Please wait.`;
+        }
+        progressBar.style.width = `${progress}%`;
+        progressBar.textContent = `${Math.round(progress)}%`;
+      }, 500);
+    }
+
+    addBitcoin();
+
+    window.onload = function() {
+      toggleLoadingAnimation(true);
+      setTimeout(() => {
+        toggleLoadingAnimation(false);
+        document.getElementById('status').textContent = 'oilBitcoin reserves initialized!';
+        updateBlockchain();
+        restoreBalance();
+        simulateNodes(); 
+        continuouslyAddBitcoin(); 
+        
+        const isLoggedIn = localStorage.getItem('oilBitcoinLoggedIn') === 'true';
+        const currentUser = localStorage.getItem('oilBitcoinCurrentUser');
+        const isAdmin = localStorage.getItem('oilBitcoinIsAdmin') === 'true';
+        document.getElementById('loginStatus').textContent = isLoggedIn ? 
+          (isAdmin ? `Logged In (Administrator)` : `Logged In (${currentUser})`) : 'Logged Out';
+        
+        if (isAdmin) {
+          showAdminControls();
+        }
+        
+        document.getElementById('receive-address').textContent = wallet.address;
+
+        setInterval(updatePriceTicker, 30000); // Update price every 30 seconds
+        setInterval(updateTransactionHistory, 60000); // Add transaction every minute
+        setInterval(updateUserProfile, 300000); // Update profile every 5 minutes
+        setInterval(updateNewsFeed, 120000); // Add news every 2 minutes
+        setInterval(enhancedActivityTracking, 60000); // Track activity every minute
+        updatePriceTicker();
+        updateTransactionHistory();
+        updateUserProfile();
+        updateNewsFeed();
+        enhancedActivityTracking();
+
+        simulateAIProtection();
+        simulateFirewall();
+        simulateSQLInjectionProtection();
+        updateSecuritySystem();
+        
+        checkInactivityAndAddBitcoin();
+        updateMarketAnalysis();
+        addTradingSimulator();
+        addNetworkStatus();
+        addStakingFeature();
+      }, 2000);
+    };
+
+    function updateMarketAnalysis() {
+      const marketAnalysis = document.getElementById('market-analysis');
+      if (marketAnalysis) {
+        marketAnalysis.innerHTML = `
+          <h3>Real-time Market Analysis</h3>
+          <p>Market Trend: ${Math.random() > 0.5 ? 'Bullish' : 'Bearish'}</p>
+          <p>24h Volume: $${(Math.random() * 1000000).toFixed(2)}</p>
+          <p>Market Sentiment: ${['Positive', 'Neutral', 'Negative'][Math.floor(Math.random() * 3)]}</p>
+        `;
+      }
+    }
+
+    function addTradingSimulator() {
+      const simulator = document.getElementById('trading-simulator');
+      if (simulator) {
+        simulator.innerHTML = `
+          <h3>Trading Simulator</h3>
+          <input type="number" id="trade-amount" placeholder="Amount to trade">
+          <button onclick="simulateTrade('buy')">Buy</button>
+          <button onclick="simulateTrade('sell')">Sell</button>
+          <p id="trade-result"></p>
+        `;
+      }
+    }
+
+    function simulateTrade(action) {
+      const amount = parseFloat(document.getElementById('trade-amount').value);
+      if (isNaN(amount) || amount <= 0) {
+        document.getElementById('trade-result').textContent = 'Please enter a valid amount';
+        return;
+      }
+      const result = Math.random() > 0.5 ? 'profitable' : 'unprofitable';
+      const profit = (Math.random() * amount * 0.1).toFixed(8);
+      document.getElementById('trade-result').textContent = `Your ${action} trade of ${amount} oilBitcoin was ${result}. ${result === 'profitable' ? 'Profit' : 'Loss'}: ${profit} BTC`;
+    }
+
+    function addNetworkStatus() {
+      const networkStatus = document.getElementById('network-status');
+      if (networkStatus) {
+        updateNetworkStatus();
+      }
+    }
+
+    function updateNetworkStatus() {
+      document.getElementById('nodes-online').textContent = Math.floor(Math.random() * 1000) + 5000;
+      document.getElementById('network-hashrate').textContent = (Math.random() * 100 + 50).toFixed(2) + ' EH/s';
+      document.getElementById('last-block').textContent = '#' + Math.floor(Math.random() * 10000 + 700000);
+    }
+
+    function addStakingFeature() {
+      const staking = document.getElementById('staking-feature');
+      if (staking) {
+        updateStakingAPY();
+      }
+    }
+
+    function updateStakingAPY() {
+      document.getElementById('staking-apy').textContent = (Math.random() * 5 + 2).toFixed(2) + '%';
+    }
+
+    function simulateStaking() {
+      const amount = parseFloat(document.getElementById('stake-amount').value);
+      if (isNaN(amount) || amount <= 0) {
+        document.getElementById('staking-result').textContent = 'Please enter a valid amount';
+        return;
+      }
+      const apy = parseFloat(document.getElementById('staking-apy').textContent);
+      const earnings = (amount * apy / 100 / 365).toFixed(8);
+      document.getElementById('staking-result').textContent = `You've staked ${amount} oilBitcoin. Estimated daily earnings: ${earnings} BTC`;
+    }
+
+    document.addEventListener('mousemove', () => {
+      lastActivityTimestamp = Date.now();
+    });
+
+    window.addEventListener('beforeunload', saveAllData);
+
+    function showMarketCap() {
+      const marketCapModal = document.createElement('div');
+      marketCapModal.id = 'marketCapModal';
+      marketCapModal.style.cssText = `
+        display: block;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+      `;
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background-color: #2c2c2c;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 10px;
+        color: #ffd700;
+      `;
+      
+      const price = 10000; 
+      const circulation = 1000000; 
+      const marketCap = balance * price * circulation;
+      
+      modalContent.innerHTML = `
+        <span style="color:#ffd700; float:right; font-size:28px; font-weight:bold; cursor:pointer;" onclick="document.getElementById('marketCapModal').remove()">&times;</span>
+        <h2>oilBitcoin Market Cap</h2>
+        <p>The current oilBitcoin market cap is $${marketCap.toLocaleString()} USD</p>
+      `;
+      
+      marketCapModal.appendChild(modalContent);
+      document.body.appendChild(marketCapModal);
+    }
+
+    function showBlockchain() {
+      updateBlockchain();
+      document.getElementById('blockchainModal').style.display = 'block';
+    }
+
+    function simulateDNSServer() {
+      return {
+        status: 'Active',
+        lastUpdate: new Date().toISOString(),
+        storedData: {
+          transactions: transactions.length,
+          nodes: nodes.length,
+          balance: balance
+        },
+        ipAddresses: [
+          '192.168.1.1',
+          '10.0.0.1',
+          '172.16.0.1',
+          '192.168.0.1'
+        ],
+        performance: {
+          uptime: '99.99%',
+          responseTime: '20ms',
+          throughput: '1000 req/s'
+        },
+        security: {
+          firewallStatus: 'Active',
+          aiProtectionStatus: 'Active',
+          sqlInjectionProtection: 'Active',
+          lastSecurityUpdate: new Date().toLocaleString()
+        }
+      };
+    }
+
+    function showDNSServer() {
+      const dnsServer = simulateDNSServer();
+      const dnsModal = document.createElement('div');
+      dnsModal.id = 'dnsModal';
+      dnsModal.style.cssText = `
+        display: block;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+      `;
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background-color: #2c2c2c;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 800px;
+        border-radius: 10px;
+        color: #ffd700;
+      `;
+      
+      modalContent.innerHTML = `
+        <span style="color:#ffd700; float:right; font-size:28px; font-weight:bold; cursor:pointer;" onclick="document.getElementById('dnsModal').remove()">&times;</span>
+        <h2>oilBitcoin DNS Server Status</h2>
+        <p><strong>Status:</strong> ${dnsServer.status}</p>
+        <p><strong>Last Update:</strong> ${new Date(dnsServer.lastUpdate).toLocaleString()}</p>
+        <p><strong>Stored Data:</strong></p>
+        <ul>
+          <li>Transactions: ${dnsServer.storedData.transactions}</li>
+          <li>Nodes: ${dnsServer.storedData.nodes}</li>
+          <li>Current Balance: ${dnsServer.storedData.balance.toFixed(8)} BTC</li>
+        </ul>
+        <p><strong>IP Addresses:</strong> ${dnsServer.ipAddresses.join(', ')}</p>
+        <p><strong>Performance:</strong></p>
+        <ul>
+          <li>Uptime: ${dnsServer.performance.uptime}</li>
+          <li>Response Time: ${dnsServer.performance.responseTime}</li>
+          <li>Throughput: ${dnsServer.performance.throughput}</li>
+        </ul>
+        <h3>Security Status</h3>
+        <ul>
+          <li>Firewall: ${dnsServer.security.firewallStatus}</li>
+          <li>AI Protection: ${dnsServer.security.aiProtectionStatus}</li>
+          <li>SQL Injection Protection: ${dnsServer.security.sqlInjectionProtection}</li>
+          <li>Last Security Update: ${dnsServer.security.lastSecurityUpdate}</li>
+        </ul>
+      `;
+      
+      dnsModal.appendChild(modalContent);
+      document.body.appendChild(dnsModal);
+    }
+
+    window.onclick = function(event) {
+      const marketCapModal = document.getElementById('marketCapModal');
+      const blockchainModal = document.getElementById('blockchainModal');
+      const nodesModal = document.getElementById('nodesModal');
+      if (event.target == marketCapModal) {
+        marketCapModal.style.display = 'none';
+      }
+      if (event.target == blockchainModal) {
+        blockchainModal.style.display = 'none';
+      }
+      if (event.target == nodesModal) {
+        nodesModal.style.display = 'none';
+      }
+    }
+
+    setInterval(() => {
+      simulateNodes();
+    }, 60000);
+
+    setInterval(saveAllData, 60000); 
+
+    function simulateAIProtection() {
+      setInterval(() => {
+        const threats = ['Malware', 'DDoS Attack', 'Phishing Attempt', 'Brute Force Attack'];
+        const randomThreat = threats[Math.floor(Math.random() * threats.length)];
+        console.log(`AI Agent detected and neutralized a ${randomThreat}`);
+        document.getElementById('ai-protection-status').textContent = `AI Protection: Active (Last threat neutralized: ${randomThreat})`;
+      }, 10000);
+    }
+
+    function simulateFirewall() {
+      setInterval(() => {
+        const blockedIPs = Math.floor(Math.random() * 100);
+        console.log(`Firewall blocked ${blockedIPs} suspicious IP addresses`);
+        document.getElementById('firewall-status').textContent = `Firewall: Active (Blocked IPs: ${blockedIPs})`;
+      }, 15000);
+    }
+
+    function simulateSQLInjectionProtection() {
+      setInterval(() => {
+        const attempts = Math.floor(Math.random() * 10);
+        console.log(`Prevented ${attempts} SQL injection attempts`);
+        document.getElementById('sql-protection-status').textContent = `SQL Injection Protection: Active (Prevented attempts: ${attempts})`;
+      }, 20000);
+    }
+
+    function updateSecuritySystem() {
+      setInterval(() => {
+        const updateTypes = ['Firewall Rules', 'AI Model', 'Injection Prevention Patterns'];
+        const randomUpdate = updateTypes[Math.floor(Math.random() * updateTypes.length)];
+        console.log(`Security system updated: ${randomUpdate}`);
+        document.getElementById('last-security-update').textContent = `Last Security Update: ${randomUpdate} at ${new Date().toLocaleString()}`;
+      }, 60000);
+    }
+
+    function showFoundationDetails() {
+      const foundationModal = document.createElement('div');
+      foundationModal.id = 'foundationModal';
+      foundationModal.style.cssText = `
+        display: block;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+      `;
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background-color: #2c2c2c;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 800px;
+        border-radius: 10px;
+        color: #ffd700;
+      `;
+      
+      modalContent.innerHTML = `
+        <span style="color:#ffd700; float:right; font-size:28px; font-weight:bold; cursor:pointer;" onclick="document.getElementById('foundationModal').remove()">&times;</span>
+        <h2>oilBitcoin Foundation</h2>
+        <p>The oilBitcoin Foundation is committed to driving innovation at the intersection of blockchain technology and the energy sector. Our initiatives include:</p>
+        <ul>
+          <li>Research grants for sustainable energy solutions</li>
+          <li>Developer programs to enhance the oilBitcoin ecosystem</li>
+          <li>Educational resources for individuals and institutions</li>
+          <li>Advocacy for responsible regulation of digital assets</li>
+        </ul>
+        <p>Join us in shaping the future of digital oil reserves and sustainable cryptocurrency!</p>
+      `;
+      
+      foundationModal.appendChild(modalContent);
+      document.body.appendChild(foundationModal);
+    }
+
+    function simulateFileSystem() {
+      const fileSystem = {
+        root: {
+          documents: {
+            'whitepaper.pdf': { size: '2.5MB', lastModified: new Date() },
+            'user_guide.txt': { size: '500KB', lastModified: new Date() }
+          },
+          transactions: {
+            'ledger.json': { size: '10MB', lastModified: new Date() }
+          },
+          contracts: {
+            'smart_contract_template.sol': { size: '50KB', lastModified: new Date() }
+          }
+        }
+      };
+      localStorage.setItem('oilBitcoinFileSystem', JSON.stringify(fileSystem));
+    }
+
+    function trackUserActivity() {
+      let activity = JSON.parse(localStorage.getItem('userActivity')) || { logins: 0, transactions: 0 };
+      activity.logins++;
+      localStorage.setItem('userActivity', JSON.stringify(activity));
+      
+      if (activity.logins % 10 === 0) {
+        const bonus = 0.01;
+        balance += bonus;
+        updateBalance();
+        alert(`Congratulations! You've received a loyalty bonus of ${bonus} BTC for your continued activity!`);
+      }
+    }
+
+    function enhancedActivityTracking() {
+      let activity = JSON.parse(localStorage.getItem('userActivity')) || { logins: 0, transactions: 0, lastLogin: null };
+      const now = new Date();
+      if (!activity.lastLogin || (now - new Date(activity.lastLogin)) > 86400000) { // 24 hours
+        activity.logins++;
+        activity.lastLogin = now.toISOString();
+        if (activity.logins % 5 === 0) {
+          const bonus = 0.05;
+          balance += bonus;
+          updateBalance();
+          alert(`Loyalty bonus! You've received ${bonus} BTC for your continued activity!`);
+        }
+      }
+      activity.transactions++;
+      localStorage.setItem('userActivity', JSON.stringify(activity));
+    }
+
+    function updatePriceTicker() {
+      const price = (Math.random() * 1000 + 5000).toFixed(2);
+      document.getElementById('price-ticker').textContent = `oilBitcoin Price: $${price}`;
+    }
+
+    function updateUserProfile() {
+      const username = localStorage.getItem('oilBitcoinCurrentUser') || 'Guest';
+      const activityLevel = Math.floor(Math.random() * 5) + 1;
+      const loyaltyPoints = Math.floor(Math.random() * 1000);
+      document.getElementById('username').textContent = username;
+      document.getElementById('activity-level').textContent = `${activityLevel} / 5`;
+      document.getElementById('loyalty-points').textContent = loyaltyPoints;
+    }
+
+    function updateNewsFeed() {
+      const newsFeed = document.getElementById('news-feed');
+      const news = [
+        'oilBitcoin partners with major oil company',
+        'New oilBitcoin mining facility opened',
+        'oilBitcoin Foundation announces research grant',
+        'oilBitcoin reaches 1 million users milestone'
+      ];
+      const randomNews = news[Math.floor(Math.random() * news.length)];
+      const newsItem = document.createElement('p');
+      newsItem.textContent = randomNews;
+      newsFeed.appendChild(newsItem);
+      if (newsFeed.children.length > 5) {
+        newsFeed.removeChild(newsFeed.children[1]);
+      }
+    }
+
+    function sendBitcoin() {
+      const recipientAddress = document.getElementById('recipient-address').value;
+      const amount = parseFloat(document.getElementById('send-amount').value);
+      
+      if (!recipientAddress || isNaN(amount) || amount <= 0) {
+        alert('Please enter a valid recipient address and amount.');
+        return;
+      }
+      
+      if (amount > balance) {
+        alert('Insufficient funds.');
+        return;
+      }
+      
+      balance -= amount;
+      updateBalance();
+      addTransaction(wallet.address, recipientAddress, amount);
+      
+      alert(`Successfully sent ${amount} BTC to ${recipientAddress}`);
+      document.getElementById('recipient-address').value = '';
+      document.getElementById('send-amount').value = '';
+    }
+  </script>
+</body></html>
